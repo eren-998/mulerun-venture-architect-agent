@@ -1,6 +1,6 @@
 # 🚀 Venture Architect AI Agent
 
-[![Platform](https://img.shields.io/badge/Platform-Mulerun-brightgreen?style=for-the-badge)](https://mulerun.com/)
+[![Platform](https://img.shields.io/badge/Platform-Mulerun-brightgreen?style=for-the-badge)]([https://mulerun.com/](https://mulerun.com/@rudntamug659yai/venture-architect-ai-agent))
 [![n8n](https://img.shields.io/badge/Workflow-n8n-blueviolet?style=for-the-badge)](https://n8n.io/)
 [![AI Model](https://img.shields.io/badge/Model-Google%20Gemini-blue?style=for-the-badge)](https://deepmind.google/technologies/gemini/)
 [![Research](https://img.shields.io/badge/Data-Tavily%20AI-darkgreen?style=for-the-badge)](https://tavily.com/)
