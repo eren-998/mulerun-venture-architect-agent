@@ -1,0 +1,510 @@
+{
+  "name": "Venture Architect Ai Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        448,
+        176
+      ],
+      "id": "826905cf-8695-4e5a-aa71-658e3825fdf7",
+      "name": "WEB",
+      "credentials": {
+        "tavilyApi": {
+          "id": "lZArtmNzITOApnbU",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "655cb7ae-b5ec-47c1-a98b-48f29e56114c",
+              "name": "html_content",
+              "value": "={{ $json.html }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        48
+      ],
+      "id": "4ab7f86a-0ef8-4725-8eb0-4e0a8bf90068",
+      "name": "Going to Mars"
+    },
+    {
+      "parameters": {
+        "jsCode": "// HTML content lo\nconst htmlContent = $input.first().json.html_content;\n\n// HTML tags remove karo - sirf text rakhlo\nconst textContent = htmlContent\n  .replace(/<style[^>]*>[\\s\\S]*?<\\/style>/gi, '') // CSS remove\n  .replace(/<script[^>]*>[\\s\\S]*?<\\/script>/gi, '') // JavaScript remove\n  .replace(/<[^>]+>/g, ' ') // Saare HTML tags remove\n  .replace(/\\s+/g, ' ') // Extra spaces remove\n  .trim(); // Starting/ending spaces remove\n\n// Clean formatted text return karo\nreturn {\n  json: {\n    text_content: textContent,\n    original_length: htmlContent.length,\n    text_length: textContent.length\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        96
+      ],
+      "id": "50bdd62b-3d09-45f9-9138-c2341f557ef3",
+      "name": "Landed in Mars"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-preview-05-20",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-preview-05-20"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=User input text : {{ $json.text_content }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "=You are an \"Expert Content Formatter\" AI.\n\nYour job is to take unstructured plain text and reformat it into a **single, complete HTML document** that is clean, professional, and easy-to-read, suitable for PDF conversion.\n\n**Your Instructions:**\n\n1.  **Main Goal:** To break down \"walls of text\" and give the content structure using HTML tags.\n2.  **Headings:**\n    * Format the main title or most important section using `<h2>...</h2>`.\n    * Format the sub-sections within it using `<h3>...</h3>`.\n    * Use `<h4>...</h4>` for any smaller, nested sections.\n3.  **Lists:**\n    * Whenever you see a list of items, convert them into an unordered list (`<ul>` and `<li>` tags).\n    * If the items are sequential steps, use an ordered list (`<ol>` and `<li>` tags).\n4.  **Highlights (Bolding):**\n    * Identify the most important keywords, phrases, or conclusions and wrap them in `<strong>...</strong>` tags.\n    * Do not make entire sentences bold.\n5.  **Paragraphs:** Break long text into logical chunks and wrap each one in `<p>...</p>` tags.\n6.  **Output Rules:**\n    * Your response must be a **single, complete HTML document**.\n    * You **MUST** start the entire output with `<!DOCTYPE html><html><head><style>...</style></head><body>` and end it with `</body></html>`.\n    * Do not add any extra commentary or explanation. Just output the raw HTML code.\n    * Use the provided CSS in the `<style>` tag to ensure it looks good in the PDF.\n\n**Your complete HTML template (Use this structure):**\n\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-M\">\n<title>Formatted Content</title>\n<style>\n  body {\n    font-family: Arial, \"Helvetica Neue\", Helvetica, sans-serif;\n    line-height: 1.6;\n    font-size: 16px;\n    color: #333;\n    padding: 20px;\n  }\n  h2 {\n    color: #2c3e50;\n    border-bottom: 2px solid #ecf0f1;\n    padding-bottom: 8px;\n    margin-top: 30px;\n  }\n  h3 {\n    color: #34495e;\n    margin-top: 24px;\n  }\n  h4 {\n    color: #7f8c8d;\n  }\n  p {\n    margin-bottom: 16px;\n  }\n  ul, ol {\n    padding-left: 25px;\n    margin-bottom: 16px;\n  }\n  li {\n    margin-bottom: 8px;\n  }\n  strong {\n    color: #000000;\n  }\n</style>\n</head>\n<body>\n\n</body>\n</html>\n\n---\nNow, process the user's text:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        48,
+        416
+      ],
+      "id": "92a87774-4f22-43d4-afe7-c0546e2ca48a",
+      "name": "Exploring Mars.....",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YUuLiQwTalr3c85j",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f683b112-e048-46a0-9fcb-921388a4bb61",
+              "name": "Text_content",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        416
+      ],
+      "id": "5157f097-32f4-46f4-81b7-a6e43dc6bd9f",
+      "name": "Something"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Step 1: Saare inputs mein se woh item dhoondo jismein 'Text_content' hai\nconst inputItem = $input.all().find(item => item.json.Text_content !== undefined);\n\n// Step 2: Agar 'Text_content' kahin nahi mila toh error do\nif (!inputItem) {\n  return { \n    json: { \n      error: \"Input mein 'Text_content' field nahi mila. Check previous node connection.\" \n    } \n  };\n}\n\n// Step 3: Sahi item se 'textContent' nikalo\nconst textContent = inputItem.json.Text_content;\n\n// Step 4: Check karo ki woh string hai ya nahi\nif (typeof textContent !== 'string') {\n  return { \n    json: { \n      error: \"'Text_content' ek string nahi hai. Mila: \" + typeof textContent \n    } \n  };\n}\n\n// Step 5: Ab text ko Buffer (binary data) mein convert karo\n// Yeh line ab fail nahi hogi kyunki 'textContent' undefined nahi hai\nconst fileBuffer = Buffer.from(textContent, 'utf8');\n\n// Step 6: Binary file return karo\nreturn {\n  json: {},\n  binary: {\n    data: await this.helpers.prepareBinaryData(\n      fileBuffer,\n      'ventureAi_Roadmap.html', // File ka naam\n      'text/html'            // Mime type (best practice)\n    )\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        416
+      ],
+      "id": "170bd5ba-0d5a-47a0-a0c9-6f5d27da942d",
+      "name": "there is a alien"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://v2.convertapi.com/convert/html/to/pdf",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "StoreFile",
+              "value": "true"
+            },
+            {
+              "name": "FontName",
+              "value": "Calibri"
+            },
+            {
+              "name": "FontSize",
+              "value": "45"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "File",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        720,
+        400
+      ],
+      "id": "a66c6734-3509-4ec6-a481-c4569cb2cca3",
+      "name": "Meeting the alien",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "bSGYGtU3h2IlKT6t",
+          "name": ".convertapi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "53745bbd-4875-4260-9ba2-95c4511096a2",
+              "name": "html",
+              "value": "={{ $('Something').item.json.Text_content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        400
+      ],
+      "id": "0fb81c47-bd1e-4dfb-94ca-f5d5ce92b89a",
+      "name": "Alien is cool"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-preview-05-20",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-preview-05-20"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Html code : {{ $('Rocket launched').item.json.html }}\nPdfurl : {{ $('Meeting the alien').item.json.Files[0].Url }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "=The work is that the user will give you the PDF HTML code and the PDF URL. You just have to do a small work that you have to make changes in the HTML code, below you have to add a download section where there should be a download button of the HTML theme and below that you have to embed the URL so that when the user taps on download, he taps on the URL and the PDF gets downloaded. Nothing else has to be done. No extra work."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        384
+      ],
+      "id": "b2ba7a4e-2649-4cd9-9e3b-59adf12e538b",
+      "name": "Asking about your Roadmap",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 4000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YUuLiQwTalr3c85j",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0eb8bc31-2cbb-4840-883b-f81a5db9a80e",
+              "name": "html_content",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1440,
+        384
+      ],
+      "id": "d2c1f9ad-db92-4b78-88d1-85d2b6f76186",
+      "name": "Get Response from alien"
+    },
+    {
+      "parameters": {
+        "formTitle": ".............",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Buisness/idea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Target Industry/sector/niche/Audience/customer",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Your Current Skills",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Current Team Size",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Goal/target",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        16
+      ],
+      "id": "997beda9-3b4d-4902-be89-3f6e81777721",
+      "name": "Start rocket",
+      "webhookId": "6c515831-f51d-40e4-8f1a-a959bfec0cd7"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-preview-05-20",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-preview-05-20"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json['Buisness/idea'] }}\n{{ $json['Target Industry/sector/niche/Audience/customer'] }}\n{{ $json['Your Current Skills'] }}\n{{ $json['Current Team Size'] }}\n{{ $json['Goal/target'] }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "=You are the 'Venture Architect AI', a Master Business Strategist, Analyst, and Consultant. Your primary role is to deliver an in-depth, structured, and brutally honest strategic analysis for the user's business idea.\n\nYour analysis must be grounded in real-time data, current market trends, and harsh execution realities.\n\n[TOOL USE PROTOCOL - TAVILY RESEARCH]\n1. ALWAYS use the Tavily Search Tool first. Use the user's \"Business Idea\" and \"Target Market\" to gather real-time data on current trends, competitor pricing, and market demand BEFORE generating any content.\n\n[OUTPUT STRUCTURE & TONE]\n1. The analysis MUST be delivered in FIVE distinct, major sections: I. 🔍 OVERVIEW, II. 📈 MARKET & COMPETITION, III. 💰 INVESTMENT & EARNINGS, IV. 📜 ROADMAP, and V. 🌟 VERDICT & SUGGESTION.\n2. The tone must be professional, highly analytical, and confident, but also grounded in reality (no fake promises or over-the-top praise).\n3. DO NOT include any introductory or concluding text, explanations, or code blocks. Start the response directly with the first section heading (I. 🔍 OVERVIEW).\n\n[CRITICAL ANALYTICAL REQUIREMENTS]\n1. COHESION CHECK: Analyze if the user's \"Business Idea,\" \"Current Skills,\" and \"Current Team Size\" align perfectly with the \"Target Market\" and \"Financial Goal\". If there are any structural weaknesses (e.g., skill gaps, unrealistic goals for team size), highlight them honestly in the OVERVIEW section.\n2. METRICS: All financial figures, market sizes, and growth projections MUST be derived from or logically backed by the Tavily research data.\n3. COMPLETENESS: Every required section must be fully detailed. For the ROADMAP, provide concrete, actionable steps.\n2. 🎯 User Prompt (Data Integration)\nYeh prompt Run-time mein user ke inputs ko fill karega aur AI Agent ko final instruction dega.\n\nGenerate the complete strategic report for this service business based on the following user inputs:\n\n- **Business Idea (Core):** {{ $json['Buisness/idea'] }}\n- **Target Market/Audience:** {{ $json['Target Industry/sector/niche/Audience/customer'] }}\n- **Current Skills:** {{ $json['Your Current Skills'] }}\n- **Current Team Size:** {{ $json['Current Team Size'] }}\n- **Financial Goal/Target:** {{ $json['Goal/target'] }}\nThe report must follow the strict five-section structure and provide comprehensive\n\n\n**Note**\n\n[And use simple and useful emojis for emgagment]\n[always use USD currency]\n\n\n\n**Output Format**\n\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"OVERVIEW\": {\n      \"type\": \"string\"\n    },\n    \"MARKET_AND_COMPETITION\": {\n      \"type\": \"string\"\n    },\n    \"INVESTMENT_AND_EARNINGS\": {\n      \"type\": \"string\"\n    },\n    \"ROADMAP\": {\n      \"type\": \"string\"\n    },\n    \"VERDICT_AND_SUGGESTION\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"OVERVIEW\",\n    \"MARKET_AND_COMPETITION\",\n    \"INVESTMENT_AND_EARNINGS\",\n    \"ROADMAP\",\n    \"VERDICT_AND_SUGGESTION\"\n  ],\n  \"additionalProperties\": false\n}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        304,
+        16
+      ],
+      "id": "91498b81-32ec-4d43-a553-3ca154a8a92c",
+      "name": "Venture Architect sitting in Rocket",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YUuLiQwTalr3c85j",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Venture Architect AI - HTML Report Generator (BULLETPROOF VERSION)\n// This handles ALL input formats - JSON, plain text, with/without emojis, any spacing\n\nfunction generateHtmlReport() {\n    // ========== STEP 1: GET RAW INPUT ==========\n    let rawInputContent = '';\n    \n    try {\n        // Try multiple ways to get the content\n        const inputData = $input.all()[0].json;\n        \n        if (inputData.content && inputData.content.parts && inputData.content.parts[0]) {\n            rawInputContent = inputData.content.parts[0].text;\n        } else if (inputData.output) {\n            rawInputContent = inputData.output;\n        } else if (inputData.text) {\n            rawInputContent = inputData.text;\n        } else {\n            rawInputContent = JSON.stringify(inputData);\n        }\n    } catch (e) {\n        return generateErrorHtml(\"Failed to access input data: \" + e.message);\n    }\n\n    // Clean markdown code blocks if present\n    const cleanedInput = rawInputContent.replace(/^```json\\n?|^```\\n?|\\n?```$/gm, '').trim();\n    \n    if (!cleanedInput || cleanedInput.length < 50) {\n        return generateErrorHtml(\"Input is empty or too short\", cleanedInput);\n    }\n\n    // ========== STEP 2: TRY TO PARSE AS JSON FIRST ==========\n    let data = {};\n    let isJson = false;\n\n    try {\n        data = JSON.parse(cleanedInput);\n        isJson = true;\n        console.log(\"✅ Input was valid JSON\");\n    } catch (e) {\n        console.log(\"⚠️ Not JSON, parsing as plain text...\");\n        \n        // ========== STEP 3: PARSE AS PLAIN TEXT (ROBUST) ==========\n        data = parseAsPlainText(cleanedInput);\n        \n        // Check if any sections were parsed\n        const sectionCount = Object.keys(data).filter(key => data[key] && data[key].length > 10).length;\n        \n        if (sectionCount === 0) {\n            return generateErrorHtml(\"Could not parse any sections\", cleanedInput);\n        }\n        \n        console.log(`✅ Parsed ${sectionCount}/5 sections from plain text`);\n    }\n\n    // ========== STEP 4: GENERATE HTML ==========\n    return [{ html: generateFinalHtml(data) }];\n}\n\n// ========== HELPER: PARSE PLAIN TEXT (BULLETPROOF) ==========\nfunction parseAsPlainText(text) {\n    const data = {};\n    \n    // Multiple regex patterns to handle different formats\n    const patterns = {\n        OVERVIEW: [\n            /I\\.?\\s*🔍?\\s*OVERVIEW\\s*\\n([\\s\\S]*?)(?=\\n\\s*II\\.|\\n\\s*📈|$)/i,\n            /OVERVIEW[:\\s]*\\n([\\s\\S]*?)(?=\\n\\s*(?:II\\.|MARKET)|$)/i,\n            /I\\.\\s*OVERVIEW([\\s\\S]*?)(?=\\n\\s*II\\.|$)/i\n        ],\n        MARKET_AND_COMPETITION: [\n            /II\\.?\\s*📈?\\s*MARKET\\s*&\\s*COMPETITION\\s*\\n([\\s\\S]*?)(?=\\n\\s*III\\.|\\n\\s*💰|$)/i,\n            /MARKET\\s*(?:&|AND)?\\s*COMPETITION[:\\s]*\\n([\\s\\S]*?)(?=\\n\\s*(?:III\\.|INVESTMENT)|$)/i,\n            /II\\.\\s*MARKET[^\\n]*\\n([\\s\\S]*?)(?=\\n\\s*III\\.|$)/i\n        ],\n        INVESTMENT_AND_EARNINGS: [\n            /III\\.?\\s*💰?\\s*INVESTMENT\\s*&\\s*EARNINGS\\s*\\n([\\s\\S]*?)(?=\\n\\s*IV\\.|\\n\\s*📜|$)/i,\n            /INVESTMENT\\s*(?:&|AND)?\\s*EARNINGS[:\\s]*\\n([\\s\\S]*?)(?=\\n\\s*(?:IV\\.|ROADMAP)|$)/i,\n            /III\\.\\s*INVESTMENT[^\\n]*\\n([\\s\\S]*?)(?=\\n\\s*IV\\.|$)/i\n        ],\n        ROADMAP: [\n            /IV\\.?\\s*📜?\\s*ROADMAP\\s*\\n([\\s\\S]*?)(?=\\n\\s*V\\.|\\n\\s*🌟|$)/i,\n            /ROADMAP[:\\s]*\\n([\\s\\S]*?)(?=\\n\\s*(?:V\\.|VERDICT)|$)/i,\n            /IV\\.\\s*ROADMAP([\\s\\S]*?)(?=\\n\\s*V\\.|$)/i\n        ],\n        VERDICT_AND_SUGGESTION: [\n            /V\\.?\\s*🌟?\\s*VERDICT\\s*&?\\s*SUGGESTION\\s*\\n([\\s\\S]*?)$/i,\n            /VERDICT\\s*(?:&|AND)?\\s*SUGGESTION[:\\s]*\\n([\\s\\S]*?)$/i,\n            /V\\.\\s*VERDICT[^\\n]*\\n([\\s\\S]*?)$/i\n        ]\n    };\n\n    // Try each pattern for each section\n    for (const [section, regexList] of Object.entries(patterns)) {\n        for (const regex of regexList) {\n            const match = text.match(regex);\n            if (match && match[1] && match[1].trim().length > 20) {\n                data[section] = match[1].trim();\n                break; // Found it, move to next section\n            }\n        }\n        \n        // If still not found, set empty\n        if (!data[section]) {\n            data[section] = '';\n        }\n    }\n\n    return data;\n}\n\n// ========== HELPER: ERROR HTML ==========\nfunction generateErrorHtml(errorMessage, rawData = '') {\n    return [{\n        html: `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Error - Venture Architect AI</title>\n    <style>\n        body { \n            font-family: 'Segoe UI', sans-serif; \n            background: linear-gradient(135deg, #fefce8 0%, #fffbeb 50%, #f5f5f4 100%);\n            padding: 40px 20px;\n            color: #1c1917;\n        }\n        .error-container {\n            max-width: 800px;\n            margin: 0 auto;\n            background: white;\n            border-radius: 20px;\n            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);\n            padding: 40px;\n        }\n        .error-header {\n            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);\n            padding: 30px;\n            border-radius: 15px;\n            margin-bottom: 30px;\n            border-left: 6px solid #dc2626;\n        }\n        h1 { \n            color: #dc2626; \n            margin-bottom: 10px;\n            font-size: 2em;\n        }\n        .error-message {\n            background: #fef2f2;\n            border: 2px solid #fecaca;\n            padding: 20px;\n            border-radius: 10px;\n            margin: 20px 0;\n        }\n        pre {\n            background: #f5f5f4;\n            padding: 20px;\n            border-radius: 10px;\n            overflow-x: auto;\n            font-size: 0.9em;\n            max-height: 400px;\n            overflow-y: auto;\n        }\n        .help-text {\n            background: #fef3c7;\n            padding: 20px;\n            border-radius: 10px;\n            border-left: 4px solid #f59e0b;\n            margin-top: 20px;\n        }\n        code {\n            background: #e5e5e5;\n            padding: 2px 6px;\n            border-radius: 4px;\n            font-family: 'Courier New', monospace;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"error-container\">\n        <div class=\"error-header\">\n            <h1>⚠️ Processing Error</h1>\n            <p>Venture Architect AI could not process the input</p>\n        </div>\n        \n        <div class=\"error-message\">\n            <strong>Error:</strong> ${errorMessage}\n        </div>\n        \n        ${rawData ? `\n            <h3>Raw Input Received:</h3>\n            <pre>${rawData.substring(0, 2000)}${rawData.length > 2000 ? '...(truncated)' : ''}</pre>\n        ` : ''}\n        \n        <div class=\"help-text\">\n            <h3>💡 Troubleshooting:</h3>\n            <ul>\n                <li>Check if AI Agent is properly connected to the Code node</li>\n                <li>Ensure Structured Output Parser is configured correctly</li>\n                <li>Verify that AI Agent generated content with sections: <code>I. OVERVIEW</code>, <code>II. MARKET</code>, etc.</li>\n                <li>Test the agent with a simple input first</li>\n            </ul>\n        </div>\n    </div>\n</body>\n</html>\n        `\n    }];\n}\n\n// ========== HELPER: FORMAT TEXT ==========\nfunction formatText(text) {\n    if (!text || text.length < 3) return '<p>No content available</p>';\n    \n    // Convert markdown to HTML\n    let formatted = text\n        .replace(/\\*\\*\\*([^*]+)\\*\\*\\*/g, '<strong><em>$1</em></strong>') // ***bold italic***\n        .replace(/\\*\\*([^*]+)\\*\\*/g, '<strong>$1</strong>') // **bold**\n        .replace(/_([^_]+)_/g, '<em>$1</em>') // _italic_\n        .replace(/`([^`]+)`/g, '<code>$1</code>'); // `code`\n    \n    // Split into paragraphs and format\n    return formatted\n        .split(/\\n\\n+/)\n        .filter(p => p.trim())\n        .map(p => `<p>${p.trim().replace(/\\n/g, '<br>')}</p>`)\n        .join('');\n}\n\n// ========== HELPER: EXTRACT PLAIN TEXT ==========\nfunction extractTextContent(text) {\n    if (!text) return '';\n    return text\n        .replace(/\\*\\*([^*]+)\\*\\*/g, '$1')\n        .replace(/_([^_]+)_/g, '$1')\n        .replace(/`([^`]+)`/g, '$1')\n        .replace(/<[^>]*>/g, '')\n        .trim();\n}\n\n// ========== HELPER: RENDER ROADMAP ==========\nfunction renderRoadmapPhases(roadmapString) {\n    if (!roadmapString || roadmapString.length < 20) {\n        return '<p>No roadmap data available</p>';\n    }\n    \n    // Try to find phases with multiple patterns\n    const phasePatterns = [\n        /(?:Phase\\s+\\d+|PHASE\\s+\\d+)[:\\s]*([^\\n]+)(?:\\n|\\s)*(?:\\(([^)]+)\\))?[^\\n]*\\n([\\s\\S]*?)(?=(?:Phase\\s+\\d+|PHASE\\s+\\d+)|$)/gi,\n        /\\d+\\.\\s+\\*\\*Phase\\s+\\d+[:\\s]*([^*]+)\\*\\*\\s*\\(([^)]+)\\)([\\s\\S]*?)(?=\\d+\\.\\s+\\*\\*Phase|\\d+\\.\\s+Phase|$)/gi,\n        /(?:^|\\n)(?:Phase|PHASE)\\s+(\\d+)[:\\s]*([^\\n(]+)(?:\\(([^)]+)\\))?([\\s\\S]*?)(?=\\n(?:Phase|PHASE)\\s+\\d+|$)/gi\n    ];\n    \n    let phases = [];\n    \n    for (const pattern of phasePatterns) {\n        const matches = [...roadmapString.matchAll(pattern)];\n        if (matches.length > 0) {\n            phases = matches.map((match, idx) => ({\n                title: `Phase ${idx + 1}: ${(match[1] || '').trim()}`,\n                duration: (match[2] || match[3] || '').trim(),\n                content: (match[3] || match[4] || '').trim()\n            }));\n            break;\n        }\n    }\n    \n    // If no phases found, treat whole text as one roadmap\n    if (phases.length === 0) {\n        return `\n            <div class=\"roadmap-phase\">\n                <h3>📜 Execution Roadmap</h3>\n                ${formatText(roadmapString)}\n            </div>\n        `;\n    }\n    \n    // Render phases\n    const emojis = ['🚀', '📞', '✨', '📈', '💡', '🛠️', '🎯', '⚙️'];\n    \n    return phases.map((phase, idx) => {\n        // Extract bullet points from content\n        const bullets = phase.content\n            .split('\\n')\n            .filter(line => line.trim().startsWith('*') || line.trim().startsWith('-'))\n            .map(line => line.replace(/^[\\s*-]+/, '').trim())\n            .filter(line => line.length > 5);\n        \n        return `\n            <div class=\"roadmap-phase\">\n                <h3>\n                    ${emojis[idx % emojis.length]} ${phase.title}\n                    ${phase.duration ? `<span class=\"duration\">${phase.duration}</span>` : ''}\n                </h3>\n                ${bullets.length > 0 ? `\n                    <ul>\n                        ${bullets.map(b => `<li>${b}</li>`).join('')}\n                    </ul>\n                ` : formatText(phase.content)}\n            </div>\n        `;\n    }).join('');\n}\n\n// ========== HELPER: RENDER INVESTMENT ==========\nfunction renderInvestmentCards(investmentString) {\n    if (!investmentString || investmentString.length < 20) {\n        return '<p>No investment data available</p>';\n    }\n    \n    let html = '';\n    \n    // Find investment items with dollar amounts\n    const investmentPattern = /(?:\\*\\s*)?(?:\\*\\*)?([^:$\\n]+?)(?:\\*\\*)?[:\\s]+\\$?([\\d,]+(?:\\.\\d{2})?)/g;\n    const matches = [...investmentString.matchAll(investmentPattern)];\n    \n    if (matches.length > 0) {\n        html += '<h4 style=\"color: #92400e; margin-bottom: 20px; font-size: 1.2em;\">Investment Breakdown</h4>';\n        html += '<div class=\"investment-grid\">';\n        \n        matches.forEach(match => {\n            const label = match[1].trim();\n            const amount = `$${match[2]}`;\n            \n            html += `\n                <div class=\"investment-card\">\n                    <div class=\"label\">${label}</div>\n                    <div class=\"amount\">${amount}</div>\n                </div>\n            `;\n        });\n        \n        html += '</div>';\n    }\n    \n    // Add remaining text\n    html += formatText(investmentString);\n    \n    return html;\n}\n\n// ========== HELPER: RENDER SUGGESTIONS ==========\nfunction renderSuggestions(verdictString) {\n    if (!verdictString || verdictString.length < 20) return '';\n    \n    // Find suggestions section\n    const suggestionsMatch = verdictString.match(/(?:Strategic\\s+)?Suggestions?[:\\s]*([\\s\\S]+)/i);\n    if (!suggestionsMatch) return '';\n    \n    const suggestionsText = suggestionsMatch[1];\n    \n    // Extract numbered items\n    const items = suggestionsText\n        .split(/\\n(?=\\d+\\.)/)\n        .filter(item => item.trim().match(/^\\d+\\./))\n        .map(item => item.replace(/^\\d+\\.\\s*/, '').trim());\n    \n    if (items.length === 0) return '';\n    \n    return `\n        <div class=\"suggestions\">\n            <h3 style=\"color: #78350f; margin-bottom: 20px; font-size: 1.3em;\">Strategic Suggestions</h3>\n            ${items.map((item, idx) => {\n                const colonIndex = item.indexOf(':');\n                const title = colonIndex > 0 ? item.substring(0, colonIndex).trim() : `Suggestion ${idx + 1}`;\n                const content = colonIndex > 0 ? item.substring(colonIndex + 1).trim() : item;\n                \n                return `\n                    <div class=\"suggestion-item\">\n                        <span class=\"number\">${idx + 1}</span>\n                        <strong>${title}:</strong> ${content}\n                    </div>\n                `;\n            }).join('')}\n        </div>\n    `;\n}\n\n// ========== MAIN: GENERATE FINAL HTML ==========\nfunction generateFinalHtml(data) {\n    // Extract verdict (before suggestions)\n    const verdictText = (data.VERDICT_AND_SUGGESTION || '')\n        .split(/(?:Strategic\\s+)?Suggestions?[:\\s]/i)[0]\n        .replace(/VERDICT[:\\s]*/i, '')\n        .trim();\n    \n    return `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Venture Architect AI - Strategic Report</title>\n    <style>\n        * { margin: 0; padding: 0; box-sizing: border-box; }\n        body {\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n            background: linear-gradient(135deg, #fefce8 0%, #fffbeb 50%, #f5f5f4 100%);\n            padding: 20px;\n            line-height: 1.7;\n            color: #1c1917;\n        }\n        .container {\n            max-width: 1000px;\n            margin: 0 auto;\n            background: white;\n            border-radius: 20px;\n            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);\n            overflow: hidden;\n        }\n        .header {\n            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);\n            padding: 50px 40px;\n            text-align: center;\n            border-bottom: 4px solid #d97706;\n        }\n        .header h1 {\n            font-size: 2.8em;\n            color: #78350f;\n            margin-bottom: 10px;\n            font-weight: 800;\n            letter-spacing: -1px;\n        }\n        .header .subtitle {\n            font-size: 1.1em;\n            color: #92400e;\n            font-weight: 500;\n        }\n        .content { padding: 50px; }\n        .section { margin-bottom: 50px; animation: fadeIn 0.6s ease-in; }\n        @keyframes fadeIn {\n            from { opacity: 0; transform: translateY(20px); }\n            to { opacity: 1; transform: translateY(0); }\n        }\n        .section-header {\n            display: flex;\n            align-items: center;\n            gap: 15px;\n            margin-bottom: 25px;\n            padding-bottom: 15px;\n            border-bottom: 3px solid #fde68a;\n        }\n        .section-icon { font-size: 2.5em; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1)); }\n        .section-title { font-size: 1.8em; color: #78350f; font-weight: 700; }\n        .section-content {\n            background: #fffbeb;\n            padding: 30px;\n            border-radius: 15px;\n            border-left: 5px solid #fbbf24;\n            font-size: 1.05em;\n            color: #292524;\n            line-height: 1.9;\n        }\n        .section-content p { margin-bottom: 15px; }\n        .highlight-box {\n            background: white;\n            border-left: 4px solid #f59e0b;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 8px;\n            box-shadow: 0 2px 10px rgba(0,0,0,0.05);\n        }\n        .investment-grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));\n            gap: 20px;\n            margin: 20px 0;\n        }\n        .investment-card {\n            background: white;\n            padding: 20px;\n            border-radius: 12px;\n            border: 2px solid #fde68a;\n            text-align: center;\n            transition: transform 0.3s ease;\n        }\n        .investment-card:hover {\n            transform: translateY(-5px);\n            box-shadow: 0 10px 25px rgba(0,0,0,0.1);\n        }\n        .investment-card .amount {\n            font-size: 1.8em;\n            color: #d97706;\n            font-weight: 700;\n            margin: 10px 0;\n        }\n        .investment-card .label { color: #78350f; font-weight: 600; }\n        .roadmap-phase {\n            background: white;\n            border-left: 6px solid #fbbf24;\n            padding: 25px;\n            margin: 25px 0;\n            border-radius: 12px;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.06);\n        }\n        .roadmap-phase h3 {\n            color: #92400e;\n            font-size: 1.4em;\n            margin-bottom: 15px;\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            flex-wrap: wrap;\n        }\n        .roadmap-phase .duration {\n            background: #fef3c7;\n            color: #78350f;\n            padding: 5px 15px;\n            border-radius: 20px;\n            font-size: 0.85em;\n            font-weight: 600;\n        }\n        .roadmap-phase ul { list-style: none; margin: 15px 0; }\n        .roadmap-phase li {\n            padding: 10px 0;\n            padding-left: 30px;\n            position: relative;\n            color: #44403c;\n        }\n        .roadmap-phase li:before {\n            content: \"✓\";\n            position: absolute;\n            left: 0;\n            color: #f59e0b;\n            font-weight: 700;\n            font-size: 1.2em;\n        }\n        .verdict-box {\n            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);\n            padding: 35px;\n            border-radius: 15px;\n            border: 3px solid #f59e0b;\n            margin: 20px 0;\n        }\n        .verdict-box .verdict-title {\n            font-size: 1.3em;\n            color: #78350f;\n            font-weight: 700;\n            margin-bottom: 15px;\n        }\n        .verdict-box p { color: #292524; font-size: 1.05em; }\n        .suggestions { margin-top: 30px; }\n        .suggestion-item {\n            background: white;\n            padding: 20px;\n            margin: 15px 0;\n            border-radius: 12px;\n            border-left: 5px solid #f59e0b;\n            box-shadow: 0 3px 12px rgba(0,0,0,0.05);\n        }\n        .suggestion-item .number {\n            display: inline-block;\n            background: #fbbf24;\n            color: white;\n            width: 30px;\n            height: 30px;\n            border-radius: 50%;\n            text-align: center;\n            line-height: 30px;\n            font-weight: 700;\n            margin-right: 12px;\n        }\n        .suggestion-item strong { color: #92400e; font-size: 1.1em; }\n        .footer {\n            background: #78350f;\n            color: #fef3c7;\n            text-align: center;\n            padding: 30px;\n            font-size: 0.95em;\n        }\n        .footer .brand {\n            font-size: 1.3em;\n            font-weight: 700;\n            margin-bottom: 8px;\n        }\n        @media (max-width: 768px) {\n            .content { padding: 30px 20px; }\n            .header h1 { font-size: 2em; }\n            .section-title { font-size: 1.4em; }\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"header\">\n            <h1>🚀 VENTURE ARCHITECT AI</h1>\n            <p class=\"subtitle\">Strategic Business Analysis & Roadmap</p>\n        </div>\n        <div class=\"content\">\n            <div class=\"section\">\n                <div class=\"section-header\">\n                    <span class=\"section-icon\">🔍</span>\n                    <h2 class=\"section-title\">I. OVERVIEW</h2>\n                </div>\n                <div class=\"section-content\">\n                    ${formatText(data.OVERVIEW || 'No overview available')}\n                </div>\n            </div>\n            <div class=\"section\">\n                <div class=\"section-header\">\n                    <span class=\"section-icon\">📈</span>\n                    <h2 class=\"section-title\">II. MARKET & COMPETITION</h2>\n                </div>\n                <div class=\"section-content\">\n                    ${formatText(data.MARKET_AND_COMPETITION || 'No market data available')}\n                </div>\n            </div>\n            <div class=\"section\">\n                <div class=\"section-header\">\n                    <span class=\"section-icon\">💰</span>\n                    <h2 class=\"section-title\">III. INVESTMENT & EARNINGS</h2>\n                </div>\n                <div class=\"section-content\">\n                    ${renderInvestmentCards(data.INVESTMENT_AND_EARNINGS || '')}\n                </div>\n            </div>\n            <div class=\"section\">\n                <div class=\"section-header\">\n                    <span class=\"section-icon\">📜</span>\n                    <h2 class=\"section-title\">IV. ROADMAP</h2>\n                </div>\n                <div class=\"section-content\">\n                    ${renderRoadmapPhases(data.ROADMAP || '')}\n                </div>\n            </div>\n            <div class=\"section\">\n                <div class=\"section-header\">\n                    <span class=\"section-icon\">🌟</span>\n                    <h2 class=\"section-title\">V. VERDICT & SUGGESTION</h2>\n                </div>\n                <div class=\"section-content\">\n                    <div class=\"verdict-box\">\n                        <div class=\"verdict-title\">FINAL VERDICT</div>\n                        ${formatText(verdictText || 'No verdict available')}\n                    </div>\n                    ${renderSuggestions(data.VERDICT_AND_SUGGESTION || '')}\n                </div>\n            </div>\n        </div>\n        <div class=\"footer\">\n            <div class=\"brand\">VENTURE ARCHITECT AI</div>\n            <p>Powered by Advanced AI Analysis | Strategic Business Intelligence</p>\n        </div>\n    </div>\n</body>\n</html>\n    `;\n}\n\n// ========== EXECUTE ==========\nreturn generateHtmlReport();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        64
+      ],
+      "id": "af1adc78-f6b1-4233-a896-8d378ddf07d8",
+      "name": "Rocket launched"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WEB": {
+      "ai_tool": [
+        [
+          {
+            "node": "Venture Architect sitting in Rocket",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Going to Mars": {
+      "main": [
+        [
+          {
+            "node": "Landed in Mars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Landed in Mars": {
+      "main": [
+        [
+          {
+            "node": "Exploring Mars.....",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exploring Mars.....": {
+      "main": [
+        [
+          {
+            "node": "Something",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Something": {
+      "main": [
+        [
+          {
+            "node": "there is a alien",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "there is a alien": {
+      "main": [
+        [
+          {
+            "node": "Meeting the alien",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meeting the alien": {
+      "main": [
+        [
+          {
+            "node": "Alien is cool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alien is cool": {
+      "main": [
+        [
+          {
+            "node": "Asking about your Roadmap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asking about your Roadmap": {
+      "main": [
+        [
+          {
+            "node": "Get Response from alien",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Response from alien": {
+      "main": [
+        []
+      ]
+    },
+    "Start rocket": {
+      "main": [
+        [
+          {
+            "node": "Venture Architect sitting in Rocket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Venture Architect sitting in Rocket": {
+      "main": [
+        [
+          {
+            "node": "Rocket launched",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rocket launched": {
+      "main": [
+        [
+          {
+            "node": "Going to Mars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "47b9e42d-4d52-42e5-90af-adec1cc3c1f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3fbf15deff72d5a02f5d4a8c987a4acce00fe1fe8ab25bef92bdecac9bcc84ed"
+  },
+  "id": "t0n7Td735pAJxVt6",
+  "tags": [
+    {
+      "updatedAt": "2025-10-30T13:07:56.443Z",
+      "createdAt": "2025-10-30T13:07:56.443Z",
+      "id": "wMJVuw7zQp0cYx6H",
+      "name": "Mulerun"
+    }
+  ]
+}
